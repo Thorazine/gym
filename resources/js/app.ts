@@ -10,6 +10,7 @@ const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
     layout: (name) => {
+        if (!name) return AppLayout;
         switch (true) {
             case name === 'Welcome':
                 return null;

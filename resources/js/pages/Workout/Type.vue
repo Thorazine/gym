@@ -1,0 +1,47 @@
+<script setup lang="ts">
+import { Head, Link } from '@inertiajs/vue3';
+import GymLayout from '@/layouts/GymLayout.vue';
+
+interface User {
+    id: number;
+    name: string;
+}
+
+const props = defineProps<{
+    user: User;
+}>();
+
+const workoutTypes = [
+    { id: 'full', label: 'Start Full Body' },
+    { id: 'upper', label: 'Start Upper Body' },
+    { id: 'lower', label: 'Start Lower Body' },
+    { id: 'butt', label: 'Start Butt' },
+    { id: 'core', label: 'Start Core' },
+];
+</script>
+
+<template>
+    <GymLayout :title="`Workout Type - ${user.name}`" :show-back-button="true">
+        
+        <div class="flex flex-col h-full mt-4">
+            <h1 class="text-5xl md:text-6xl font-black text-center uppercase tracking-widest mb-10">
+                Choose Workout
+            </h1>
+            
+            <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 pb-12 content-center">
+                <Link 
+                    v-for="type in workoutTypes" 
+                    :key="type.id"
+                    :href="`/users/${user.id}/workout/count?type=${type.id}`"
+                    class="h-32 md:h-48 flex items-center justify-center bg-gray-900 border-4 border-gray-800 rounded-3xl hover:bg-white hover:text-black hover:border-white transition-all group"
+                    :class="{'md:col-span-2' : type.id === 'full'}"
+                >
+                    <span class="text-4xl md:text-6xl font-black uppercase tracking-widest px-6 text-center">
+                        {{ type.label }}
+                    </span>
+                </Link>
+            </div>
+        </div>
+
+    </GymLayout>
+</template>
