@@ -37,4 +37,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');
 });
 
+Route::get('/api/gym/config', function () {
+    return response()->json([
+        'timings' => config('gym.timings', [])
+    ]);
+});
+
 require __DIR__.'/settings.php';

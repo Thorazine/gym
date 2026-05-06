@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { ref, onMounted } from 'vue';
 import { Head, Link } from '@inertiajs/vue3';
 import GymLayout from '@/layouts/GymLayout.vue';
+import axios from 'axios';
 
 interface User {
     id: number;
@@ -13,11 +15,26 @@ const props = defineProps<{
     exerciseCount: number;
 }>();
 
-const timings = [
-    { id: 1, work: 30, rest: 10, rounds: 3 },
-    { id: 2, work: 45, rest: 15, rounds: 3 },
-    { id: 3, work: 60, rest: 15, rounds: 3 },
-];
+interface Timing {
+    id: number;
+    work: number;
+    rest: number;
+    rounds: number;
+}
+
+const timings = ref<Timing[]>([]);
+const isLoading = ref(true);
+
+onMounted(async () => {
+    try {
+        const response = await axios.get('/api/gym/config');
+        timings.value = response.data.timings;
+    } catch (error) {
+        console.error('Failed to load timings:', error);
+    } finally {
+        isLoading.value = false;
+    }
+});
 
 </script>
 

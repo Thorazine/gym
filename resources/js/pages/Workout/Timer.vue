@@ -3,6 +3,7 @@ import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
 import { Head, Link } from '@inertiajs/vue3';
 import GymLayout from '@/layouts/GymLayout.vue';
 import { Play, Pause, SkipForward, RotateCcw, XCircle } from 'lucide-vue-next';
+import axios from 'axios';
 
 interface Exercise {
     id: number;
@@ -25,13 +26,9 @@ const props = defineProps<{
 }>();
 
 // Map timing option to work/rest/rounds
-const timingsMap: Record<string, { work: number; rest: number; rounds: number }> = {
-    '1': { work: 30, rest: 10, rounds: 3 },
-    '2': { work: 45, rest: 15, rounds: 3 },
-    '3': { work: 60, rest: 15, rounds: 3 },
-};
-
-const timingSettings = timingsMap[props.timing.toString()] || timingsMap['1'];
+const timingsMap = ref<Record<string, { work: number; rest: number; rounds: number }>>({});
+const timingSettings = ref({ work: 30, rest: 10, rounds: 3 }); // Fallback defaults
+const isLoaded = ref(false);
 
 // State
 const phase = ref<'prep' | 'work' | 'rest' | 'done'>('prep');
@@ -49,7 +46,23 @@ const currentExercise = computed(() => {
     return props.exercises[currentExerciseIndex.value];
 });
 
-onMounted(() => {
+onMounted(async () => {
+    try {
+        const response = await axios.get('/api/gym/config');
+        const timings = response.data.timings;
+        const map: Record<string, any> = {};
+        for (const t of timings) {
+            map[t.id.toString()] = { work: t.work, rest: t.rest, rounds: t.rounds };
+        }
+        timingsMap.value = map;
+        timingSettings.value = map[props.timing.toString()] || map['1'] || { work: 30, rest: 10, rounds: 3 };
+        isLoaded.value = true;
+    } catch (e) {
+        console.error('Failed to load timings API', e);
+        // Defaults if it fails
+        isLoaded.value = true;
+    }
+
     // Attempt to preload audio
     try {
         beepAudio = new Audio('/sounds/beeps/beep.mp3');
@@ -114,13 +127,13 @@ const startTimer = () => {
 const transitionPhase = () => {
     if (phase.value === 'prep') {
         phase.value = 'work';
-        timeLeft.value = timingSettings.work;
+        timeLeft.value = timingSettings.value.work;
     } 
     else if (phase.value === 'work') {
         // If we just finished work, either we go to rest, or to the next exercise/done
-        if (currentRound.value < timingSettings.rounds) {
+        if (currentRound.value < timingSettings.value.rounds) {
             phase.value = 'rest';
-            timeLeft.value = timingSettings.rest;
+            timeLeft.value = timingSettings.value.rest;
         } else {
             // Finished all rounds for this exercise
             nextExercise();
@@ -130,7 +143,7 @@ const transitionPhase = () => {
         // Rest is over, go back to work for next round
         currentRound.value++;
         phase.value = 'work';
-        timeLeft.value = timingSettings.work;
+        timeLeft.value = timingSettings.value.work;
     }
 };
 
@@ -191,7 +204,10 @@ const formatTime = (seconds: number) => {
             width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" style="display:none;"
         ></iframe>
 
-        <div class="flex flex-col h-full justify-center items-center select-none">
+        <div v-if="!isLoaded" class="flex flex-col h-full justify-center items-center text-white">
+            <p class="text-3xl font-bold uppercase tracking-wider">Loading...</p>
+        </div>
+        <div v-else class="flex flex-col h-full justify-center items-center select-none">
             
             <template v-if="phase !== 'done'">
                 <!-- Exercise Header -->
