@@ -260,20 +260,20 @@ const formatTime = (seconds: number) => {
 <template>
     <GymLayout :title="`Workout Timer - ${user.name}`" :show-back-button="false">
         
-        <div v-if="!isLoaded || !isMusicReady" class="flex flex-col h-full justify-center items-center text-white">
+        <div class="w-full max-w-2xl mx-auto px-4 pt-8 transition-opacity" :class="{'opacity-50 pointer-events-none': phase === 'done'}" v-show="musicUrl">
+            <iframe 
+                v-if="musicUrl"
+                id="sc-widget" 
+                :src="'https://w.soundcloud.com/player/?url=' + encodeURIComponent(musicUrl) + '&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&visual=false'" 
+                width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" class="rounded-2xl shadow-xl shadow-black/50 border-4 border-gray-800 bg-black"
+            ></iframe>
+        </div>
+
+        <div v-if="!isLoaded || !isMusicReady" class="flex flex-col h-full justify-center items-center text-white mt-8">
             <p class="text-3xl font-bold uppercase tracking-wider">Loading...</p>
         </div>
-        <div v-else class="flex flex-col h-full justify-center items-center select-none w-full max-w-2xl mx-auto px-4">
+        <div v-else class="flex flex-col h-full justify-center items-center select-none w-full max-w-2xl mx-auto px-4 mt-8">
             
-            <div class="w-full mb-8 transition-opacity" :class="{'opacity-50 pointer-events-none': phase === 'done'}" v-show="musicUrl">
-                <iframe 
-                    v-if="musicUrl"
-                    id="sc-widget" 
-                    :src="'https://w.soundcloud.com/player/?url=' + encodeURIComponent(musicUrl) + '&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&visual=false'" 
-                    width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" class="rounded-2xl shadow-xl shadow-black/50 border-4 border-gray-800 bg-black"
-                ></iframe>
-            </div>
-
             <!-- Start Screen -->
             <template v-if="!hasStarted">
                 <button 
