@@ -27,14 +27,14 @@ const counts = Array.from({ length: 10 }, (_, i) => i + 1);
                 Select between 1 and 10
             </p>
             
-            <div class="flex-1 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6 pb-12 content-center">
+            <div class="flex-1 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 md:gap-6 pb-12 content-center max-w-4xl mx-auto w-full">
                 <Link 
                     v-for="count in counts" 
                     :key="count"
                     :href="`/users/${user.id}/workout/timing?type=${workoutType}&count=${count}`"
                     class="aspect-square flex items-center justify-center bg-gray-900 border-4 border-gray-800 rounded-3xl hover:bg-white hover:text-black hover:border-white transition-all group"
                 >
-                    <span class="text-7xl font-black uppercase tracking-widest">
+                    <span class="text-5xl md:text-6xl font-black uppercase tracking-widest">
                         {{ count }}
                     </span>
                 </Link>

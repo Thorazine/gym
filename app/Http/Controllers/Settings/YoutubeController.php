@@ -13,7 +13,7 @@ class YoutubeController extends Controller
 {
     public function index()
     {
-        $videos = Video::with('category')->get();
+        $videos = Video::where('user_id', auth()->id())->with('category')->get();
         $categories = VideoCategory::orderBy('name')->get();
 
         return Inertia::render('settings/Youtube', [
@@ -57,6 +57,7 @@ class YoutubeController extends Controller
         }
 
         Video::create([
+            'user_id' => auth()->id(),
             'video_category_id' => $categoryId,
             'title' => $title,
             'url' => "https://www.youtube.com/watch?v={$videoId}",
@@ -69,6 +70,8 @@ class YoutubeController extends Controller
 
     public function destroy(Video $video)
     {
+        abort_if($video->user_id !== auth()->id(), 403);
+
         $video->delete();
 
         return back()->with('status', 'youtube-deleted');

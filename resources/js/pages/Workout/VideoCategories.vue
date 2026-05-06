@@ -28,14 +28,14 @@ const props = defineProps<{
                 Choose Category
             </h1>
             
-            <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 pb-12 content-center">
+            <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 pb-12 content-center max-w-4xl mx-auto w-full">
                 <Link 
                     v-for="category in categories" 
                     :key="category.id"
                     :href="`/users/${user.id}/workout/video-categories/${category.id}`"
-                    class="h-32 md:h-48 flex items-center justify-center bg-gray-900 border-4 border-gray-800 rounded-3xl hover:bg-white hover:text-black hover:border-white transition-all group"
+                    class="h-20 md:h-32 flex items-center justify-center bg-gray-900 border-4 border-gray-800 rounded-3xl hover:bg-white hover:text-black hover:border-white transition-all group"
                 >
-                    <span class="text-4xl md:text-6xl font-black uppercase tracking-widest px-6 text-center">
+                    <span class="text-3xl md:text-4xl font-black uppercase tracking-widest px-6 text-center">
                         {{ category.name }}
                     </span>
                 </Link>

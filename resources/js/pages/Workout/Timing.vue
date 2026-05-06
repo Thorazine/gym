@@ -54,25 +54,25 @@ onMounted(async () => {
                     v-for="timing in timings" 
                     :key="timing.id"
                     :href="`/users/${user.id}/workout/setup?type=${workoutType}&count=${exerciseCount}&timing=${timing.id}`"
-                    class="py-12 px-6 flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 bg-gray-900 border-4 border-gray-800 rounded-3xl hover:bg-white hover:text-black hover:border-white transition-all group"
+                    class="py-8 px-4 flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6 bg-gray-900 border-4 border-gray-800 rounded-3xl hover:bg-white hover:text-black hover:border-white transition-all group"
                 >
                     <div class="flex flex-col items-center">
-                        <span class="text-6xl font-black uppercase tracking-widest">{{ timing.work }}s</span>
-                        <span class="text-2xl font-bold uppercase tracking-widest text-gray-400 group-hover:text-gray-600">Work</span>
+                        <span class="text-4xl md:text-5xl font-black uppercase tracking-widest">{{ timing.work }}s</span>
+                        <span class="text-xl font-bold uppercase tracking-widest text-gray-400 group-hover:text-gray-600">Work</span>
                     </div>
                     
-                    <span class="text-4xl text-gray-600 hidden md:block">/</span>
+                    <span class="text-3xl text-gray-600 hidden md:block">/</span>
                     
                     <div class="flex flex-col items-center">
-                        <span class="text-6xl font-black uppercase tracking-widest">{{ timing.rest }}s</span>
-                        <span class="text-2xl font-bold uppercase tracking-widest text-gray-400 group-hover:text-gray-600">Rest</span>
+                        <span class="text-4xl md:text-5xl font-black uppercase tracking-widest">{{ timing.rest }}s</span>
+                        <span class="text-xl font-bold uppercase tracking-widest text-gray-400 group-hover:text-gray-600">Rest</span>
                     </div>
                     
-                    <span class="text-4xl text-gray-600 hidden md:block">/</span>
+                    <span class="text-3xl text-gray-600 hidden md:block">/</span>
                     
                     <div class="flex flex-col items-center">
-                        <span class="text-6xl font-black uppercase tracking-widest">{{ timing.rounds }}</span>
-                        <span class="text-2xl font-bold uppercase tracking-widest text-gray-400 group-hover:text-gray-600">Rounds</span>
+                        <span class="text-4xl md:text-5xl font-black uppercase tracking-widest">{{ timing.rounds }}</span>
+                        <span class="text-xl font-bold uppercase tracking-widest text-gray-400 group-hover:text-gray-600">Rounds</span>
                     </div>
                 </Link>
             </div>

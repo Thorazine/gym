@@ -37,10 +37,13 @@ class VideoWorkoutTest extends TestCase
             '*' => Http::response('Server Error', 500)
         ]);
 
-        $this->artisan('gym:add-video')
+        $user = User::factory()->create();
+
+        $this->artisan('gym:add-youtube')
              ->expectsQuestion('Which category does this video belong to?', $category->id)
              ->expectsQuestion('Enter the full YouTube URL of the video:', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ')
              ->expectsQuestion('Enter the video title:', 'Rick Astley - Never Gonna Give You Up (Official Music Video)')
+             ->expectsQuestion('Which user does this video belong to?', $user->id)
              ->expectsOutputToContain('added successfully to category \'Test Category\'.')
              ->assertSuccessful();
 

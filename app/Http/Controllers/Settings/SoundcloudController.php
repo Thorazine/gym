@@ -12,7 +12,7 @@ class SoundcloudController extends Controller
 {
     public function index()
     {
-        $tracks = Soundcloud::all();
+        $tracks = Soundcloud::where('user_id', auth()->id())->get();
 
         return Inertia::render('settings/Soundcloud', [
             'tracks' => $tracks,
@@ -37,6 +37,7 @@ class SoundcloudController extends Controller
             $title = $data['title'] ?? 'Unknown Title';
             
             Soundcloud::create([
+                'user_id' => auth()->id(),
                 'title' => $title,
                 'url' => $url,
             ]);
@@ -49,6 +50,8 @@ class SoundcloudController extends Controller
 
     public function destroy(Soundcloud $soundcloud)
     {
+        abort_if($soundcloud->user_id !== auth()->id(), 403);
+
         $soundcloud->delete();
 
         return back()->with('status', 'soundcloud-deleted');

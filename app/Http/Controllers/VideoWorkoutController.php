@@ -23,7 +23,7 @@ class VideoWorkoutController extends Controller
 
     public function videos(User $user, VideoCategory $videoCategory)
     {
-        $videos = $videoCategory->videos()->latest()->get();
+        $videos = $videoCategory->videos()->where('user_id', $user->id)->latest()->get();
 
         return Inertia::render('Workout/Videos', [
             'user' => $user,

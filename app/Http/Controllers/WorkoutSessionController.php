@@ -124,7 +124,7 @@ class WorkoutSessionController extends Controller
             'exerciseCount' => $count,
             'timing' => $timing,
             'exerciseIds' => $exerciseIds,
-            'soundclouds' => Soundcloud::all(),
+            'soundclouds' => Soundcloud::where('user_id', $user->id)->get(),
         ]);
     }
 }

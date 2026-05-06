@@ -52,6 +52,7 @@ class YoutubeControllerTest extends TestCase
         $category = VideoCategory::create(['name' => 'Yoga', 'slug' => 'yoga']);
         
         $video = Video::create([
+            'user_id' => $user->id,
             'video_category_id' => $category->id,
             'title' => 'Test Video',
             'url' => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ',

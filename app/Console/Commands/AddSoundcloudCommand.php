@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 
+use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
 
 class AddSoundcloudCommand extends Command
@@ -42,7 +43,19 @@ class AddSoundcloudCommand extends Command
             $data = $response->json();
             $title = $data['title'] ?? 'Unknown Title';
             
+            $users = \App\Models\User::pluck('email', 'id')->toArray();
+            if (empty($users)) {
+                $this->error('No users found. Please add a user first.');
+                return;
+            }
+
+            $userId = select(
+                label: 'Which user does this Soundcloud track belong to?',
+                options: $users,
+            );
+
             $soundcloud = \App\Models\Soundcloud::create([
+                'user_id' => $userId,
                 'title' => $title,
                 'url' => $url,
             ]);

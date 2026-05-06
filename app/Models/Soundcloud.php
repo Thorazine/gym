@@ -6,5 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Soundcloud extends Model
 {
-    protected $fillable = ['title', 'url'];
+    protected $fillable = ['user_id', 'title', 'url'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

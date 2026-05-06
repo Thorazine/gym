@@ -47,6 +47,7 @@ class SoundcloudControllerTest extends TestCase
         $user = User::factory()->create();
         
         $soundcloud = Soundcloud::create([
+            'user_id' => $user->id,
             'title' => 'Test Track',
             'url' => 'https://soundcloud.com/test/track',
         ]);

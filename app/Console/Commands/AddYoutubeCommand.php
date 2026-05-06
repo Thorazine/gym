@@ -65,7 +65,19 @@ class AddYoutubeCommand extends Command
             );
         }
 
+        $users = \App\Models\User::pluck('email', 'id')->toArray();
+        if (empty($users)) {
+            $this->error('No users found. Please add a user first.');
+            return;
+        }
+
+        $userId = select(
+            label: 'Which user does this video belong to?',
+            options: $users,
+        );
+
         Video::create([
+            'user_id' => $userId,
             'video_category_id' => $categoryId,
             'title' => $title,
             'url' => "https://www.youtube.com/watch?v={$videoId}",

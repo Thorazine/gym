@@ -63,12 +63,15 @@ class GymCommandsTest extends TestCase
             'soundcloud.com/*' => Http::response(['title' => 'Test Track'], 200),
         ]);
 
+        $user = \App\Models\User::factory()->create();
+
         $this->artisan('gym:add-soundcloud')
-            ->expectsQuestion('What is the Soundcloud URL?', 'https://soundcloud.com/test/track')
-            ->expectsOutput('Title: Test Track')
-            ->expectsOutput('URL: https://soundcloud.com/test/track')
-            ->expectsOutput('Successfully saved to database!')
-            ->assertSuccessful();
+             ->expectsQuestion('What is the Soundcloud URL?', 'https://soundcloud.com/test/track')
+             ->expectsQuestion('Which user does this Soundcloud track belong to?', $user->id)
+             ->expectsOutput('Title: Test Track')
+             ->expectsOutput('URL: https://soundcloud.com/test/track')
+             ->expectsOutput('Successfully saved to database!')
+             ->assertSuccessful();
 
         $this->assertDatabaseHas('soundclouds', [
             'title' => 'Test Track',
