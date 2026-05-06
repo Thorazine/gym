@@ -36,7 +36,7 @@ const workoutTypes = [
                     :href="type.id === 'video' ? `/users/${user.id}/workout/video-categories` : `/users/${user.id}/workout/count?type=${type.id}`"
                     class="h-20 md:h-32 flex items-center justify-center bg-gray-900 border-4 border-gray-800 rounded-3xl hover:bg-white hover:text-black hover:border-white transition-all group"
                 >
-                    <span class="text-3xl md:text-4xl font-black uppercase tracking-widest px-6 text-center">
+                    <span class="text-xl sm:text-2xl md:text-4xl font-black uppercase tracking-widest px-6 text-center line-clamp-2 leading-tight">
                         {{ type.label }}
                     </span>
                 </Link>

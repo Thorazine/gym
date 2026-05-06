@@ -36,7 +36,7 @@ const props = defineProps<{
                     :href="`/users/${user.id}/workout/timer?type=${workoutType}&count=${exerciseCount}&timing=${timing}&exercises=${exerciseIds}`"
                     class="h-24 md:h-32 flex items-center justify-center bg-gray-900 border-4 border-gray-800 rounded-3xl hover:bg-white hover:text-black hover:border-white transition-all group shrink-0"
                 >
-                    <span class="text-4xl md:text-5xl font-black uppercase tracking-widest px-6 text-center">
+                    <span class="text-2xl sm:text-3xl md:text-5xl font-black uppercase tracking-widest px-6 text-center line-clamp-2 leading-tight">
                         None
                     </span>
                 </Link>
@@ -47,7 +47,7 @@ const props = defineProps<{
                     :href="`/users/${user.id}/workout/timer?type=${workoutType}&count=${exerciseCount}&timing=${timing}&exercises=${exerciseIds}&music=${music.id}`"
                     class="h-24 md:h-32 flex items-center justify-center bg-gray-900 border-4 border-gray-800 rounded-3xl hover:bg-white hover:text-black hover:border-white transition-all group shrink-0"
                 >
-                    <span class="text-4xl md:text-5xl font-black uppercase tracking-widest px-6 text-center">
+                    <span class="text-2xl sm:text-3xl md:text-5xl font-black uppercase tracking-widest px-6 text-center line-clamp-2 leading-tight">
                         {{ music.title }}
                     </span>
                 </Link>

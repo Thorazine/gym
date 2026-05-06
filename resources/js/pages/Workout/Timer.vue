@@ -251,7 +251,7 @@ const formatTime = (seconds: number) => {
                 
                 <!-- Giant Countdown -->
                 <div 
-                    class="text-[12rem] md:text-[20rem] font-black leading-none mb-12 tabular-nums"
+                    class="text-[12rem] md:text-[20rem] font-black leading-none mb-12 tabular-nums px-12 md:px-20"
                     :class="{
                         'text-yellow-500': phase === 'prep',
                         'text-white': phase === 'work',

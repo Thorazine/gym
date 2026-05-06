@@ -58,7 +58,7 @@ const submitCreateUser = () => {
                     class="w-full h-40 flex flex-col items-center justify-center bg-gray-900 border-2 border-white rounded-2xl hover:bg-white hover:text-black transition-all group"
                 >
                     <UserIcon class="w-12 h-12 mb-2 group-hover:text-black" />
-                    <span class="text-4xl font-bold uppercase tracking-wider">{{ user.name }}</span>
+                    <span class="text-2xl sm:text-3xl md:text-4xl font-bold uppercase tracking-wider line-clamp-2 leading-tight text-center px-4">{{ user.name }}</span>
                 </Link>
 
                 <!-- Create Account Button -->
