@@ -18,7 +18,7 @@ interface User {
 const props = defineProps<{
     user: User;
     workoutType: string;
-    exerciseCount: number;
+    exerciseCount: string | number;
     timing: string | number; // '1', '2', or '3'
     exercises: Exercise[];
     exerciseIds: string;
@@ -83,6 +83,20 @@ onMounted(async () => {
                 scWidget = (window as any).SC.Widget(iframe);
                 scWidget.bind((window as any).SC.Widget.Events.READY, () => {
                     isMusicReady.value = true;
+                    
+                    scWidget.bind((window as any).SC.Widget.Events.PLAY, () => {
+                        if (!hasStarted.value) {
+                            initWorkout(false); // Start workout without trying to play widget again
+                        } else if (isPaused.value) {
+                            isPaused.value = false;
+                        }
+                    });
+
+                    scWidget.bind((window as any).SC.Widget.Events.PAUSE, () => {
+                        if (hasStarted.value && !isPaused.value) {
+                            isPaused.value = true;
+                        }
+                    });
                 });
                 
                 // Fallback in case READY doesn't fire
@@ -95,7 +109,7 @@ onMounted(async () => {
     }
 });
 
-const initWorkout = async () => {
+const initWorkout = async (playWidget = true) => {
     hasStarted.value = true;
     
     // Attempt to unlock audio context
@@ -105,7 +119,7 @@ const initWorkout = async () => {
         beepAudio.currentTime = 0;
     }
     
-    if (scWidget) {
+    if (scWidget && playWidget) {
         scWidget.play();
     }
     
@@ -246,26 +260,29 @@ const formatTime = (seconds: number) => {
 <template>
     <GymLayout :title="`Workout Timer - ${user.name}`" :show-back-button="false">
         
-        <iframe 
-            v-if="musicUrl"
-            id="sc-widget" 
-            :src="'https://w.soundcloud.com/player/?url=' + encodeURIComponent(musicUrl) + '&auto_play=false'" 
-            width="10" height="10" scrolling="no" frameborder="no" allow="autoplay" style="opacity: 0.01; position: absolute; z-index: -1; pointer-events: none;"
-        ></iframe>
-
         <div v-if="!isLoaded || !isMusicReady" class="flex flex-col h-full justify-center items-center text-white">
             <p class="text-3xl font-bold uppercase tracking-wider">Loading...</p>
         </div>
-        <div v-else class="flex flex-col h-full justify-center items-center select-none">
+        <div v-else class="flex flex-col h-full justify-center items-center select-none w-full max-w-2xl mx-auto px-4">
             
+            <div class="w-full mb-8 transition-opacity" :class="{'opacity-50 pointer-events-none': phase === 'done'}" v-show="musicUrl">
+                <iframe 
+                    v-if="musicUrl"
+                    id="sc-widget" 
+                    :src="'https://w.soundcloud.com/player/?url=' + encodeURIComponent(musicUrl) + '&auto_play=false&hide_related=true&show_comments=false&show_user=false&show_reposts=false&visual=false'" 
+                    width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" class="rounded-2xl shadow-xl shadow-black/50 border-4 border-gray-800 bg-black"
+                ></iframe>
+            </div>
+
             <!-- Start Screen -->
             <template v-if="!hasStarted">
                 <button 
-                    @click="initWorkout"
-                    class="py-12 px-24 bg-white text-black rounded-[3rem] flex flex-col items-center justify-center gap-4 hover:bg-gray-200 transition-transform active:scale-95 shadow-2xl shadow-black/50"
+                    @click="initWorkout(true)"
+                    class="py-12 px-24 w-full bg-white text-black rounded-[3rem] flex flex-col items-center justify-center gap-4 hover:bg-gray-200 transition-transform active:scale-95 shadow-2xl shadow-black/50"
                 >
                     <Play class="w-24 h-24 md:w-32 md:h-32 fill-black translate-x-2" />
-                    <span class="text-4xl md:text-6xl font-black uppercase tracking-widest">START</span>
+                    <span class="text-4xl md:text-6xl font-black uppercase tracking-widest text-center leading-tight">START</span>
+                    <span v-if="musicUrl" class="text-lg text-gray-500 font-bold uppercase tracking-wider text-center mt-2 px-4">(iOS: Tap play on the music widget above)</span>
                 </button>
             </template>
             

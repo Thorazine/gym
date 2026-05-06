@@ -16,8 +16,8 @@ interface Soundcloud {
 const props = defineProps<{
     user: User;
     workoutType: string;
-    exerciseCount: number;
-    timing: number;
+    exerciseCount: string | number;
+    timing: string | number;
     exerciseIds: string;
     soundclouds: Soundcloud[];
 }>();

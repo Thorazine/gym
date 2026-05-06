@@ -12,7 +12,7 @@ interface User {
 const props = defineProps<{
     user: User;
     workoutType: string;
-    exerciseCount: number;
+    exerciseCount: string | number;
 }>();
 
 interface Timing {
