@@ -34,8 +34,12 @@ Route::get('/users/{user}/workout/video-categories/{videoCategory}', [\App\Http\
 Route::get('/users/{user}/workout/videos/{video}/play', [\App\Http\Controllers\VideoWorkoutController::class, 'play'])->name('users.workout.video.play');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'Dashboard')->name('dashboard');
+    Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 });
+
+// Workout saving routes
+Route::post('/users/{user}/workout', [\App\Http\Controllers\WorkoutController::class, 'store'])->name('users.workout.store');
+Route::put('/workouts/{workout}', [\App\Http\Controllers\WorkoutController::class, 'update'])->name('workouts.update');
 
 Route::get('/api/gym/config', function () {
     return response()->json([

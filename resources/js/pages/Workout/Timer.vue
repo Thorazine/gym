@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
-import { Head, Link } from '@inertiajs/vue3';
+import { Head, Link, router } from '@inertiajs/vue3';
 import GymLayout from '@/layouts/GymLayout.vue';
 import { Play, Pause, SkipForward, RotateCcw, XCircle } from 'lucide-vue-next';
 import axios from 'axios';
@@ -36,6 +36,7 @@ const timeLeft = ref(5); // 5 seconds prep before starting
 const currentExerciseIndex = ref(0);
 const currentRound = ref(1);
 const isPaused = ref(false);
+const workoutId = ref<number | null>(null);
 
 let timerInterval: ReturnType<typeof setInterval> | null = null;
 let beepAudio: HTMLAudioElement | null = null;
@@ -81,6 +82,16 @@ onMounted(async () => {
             }
         };
         document.body.appendChild(script);
+    }
+    
+    try {
+        const createResponse = await axios.post(`/users/${props.user.id}/workout`, {
+            type: props.workoutType,
+            start_time: new Date().toISOString(),
+        });
+        workoutId.value = createResponse.data.id;
+    } catch (e) {
+        console.error('Failed to create workout', e);
     }
     
     startTimer();
@@ -173,6 +184,19 @@ const togglePause = () => {
 
 const skipExercise = () => {
     nextExercise();
+};
+
+const endWorkout = async () => {
+    if (workoutId.value) {
+        try {
+            await axios.put(`/workouts/${workoutId.value}`, {
+                end_time: new Date().toISOString(),
+            });
+        } catch (e) {
+            console.error('Failed to update workout end time', e);
+        }
+    }
+    router.visit('/dashboard');
 };
 
 const phaseText = computed(() => {
@@ -274,14 +298,14 @@ const formatTime = (seconds: number) => {
                         <span class="text-4xl font-black uppercase tracking-widest">GO AGAIN?</span>
                     </Link>
                     
-                    <!-- End Workout goes to home -->
-                    <Link 
-                        href="/" 
+                    <!-- End Workout goes to dashboard -->
+                    <button 
+                        @click="endWorkout"
                         class="flex-1 py-10 border-4 border-gray-600 text-gray-400 rounded-3xl flex flex-col items-center justify-center gap-4 hover:border-white hover:text-white transition-transform hover:scale-105"
                     >
                         <XCircle class="w-16 h-16" />
                         <span class="text-4xl font-black uppercase tracking-widest">END WORKOUT</span>
-                    </Link>
+                    </button>
                 </div>
             </template>
             

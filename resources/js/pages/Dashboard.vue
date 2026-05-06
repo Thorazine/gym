@@ -1,47 +1,128 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
-import PlaceholderPattern from '@/components/PlaceholderPattern.vue';
 import { dashboard } from '@/routes';
+import GymLayout from '@/layouts/GymLayout.vue';
 
-defineOptions({
-    layout: {
-        breadcrumbs: [
-            {
-                title: 'Dashboard',
-                href: dashboard(),
-            },
-        ],
-    },
-});
+interface Workout {
+    id: number;
+    type: string;
+    start_time: string;
+    end_time: string | null;
+}
+
+const props = defineProps<{
+    lastWorkout: Workout | null;
+    workouts: Workout[];
+}>();
+
+const formatDuration = (start: string, end: string | null) => {
+    if (!end) return 'Incomplete';
+    const s = new Date(start).getTime();
+    const e = new Date(end).getTime();
+    const diffSeconds = Math.floor((e - s) / 1000);
+    
+    if (diffSeconds < 0) return '0s';
+    
+    const minutes = Math.floor(diffSeconds / 60);
+    const seconds = diffSeconds % 60;
+    
+    if (minutes > 0) {
+        return `${minutes}m ${seconds}s`;
+    }
+    return `${seconds}s`;
+};
+
+const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+};
 </script>
 
 <template>
-    <Head title="Dashboard" />
+    <GymLayout title="Dashboard" :show-back-button="true">
+        <Head title="Dashboard" />
 
-    <div
-        class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4"
-    >
-        <div class="grid auto-rows-min gap-4 md:grid-cols-3">
-            <div
-                class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
-            >
-                <PlaceholderPattern />
+        <div class="flex flex-col h-full mt-4 max-w-5xl mx-auto w-full gap-12">
+            
+            <!-- Last Workout Section -->
+            <div v-if="lastWorkout && lastWorkout.end_time" class="bg-gray-900 border-4 border-gray-800 rounded-3xl p-12 text-center">
+                <h1 class="text-5xl md:text-6xl font-black uppercase tracking-widest text-white mb-6">
+                    You did a great job!
+                </h1>
+                <p class="text-2xl text-gray-400 font-bold uppercase tracking-widest mb-4">
+                    Time spent on your last workout:
+                </p>
+                <div class="text-7xl md:text-[8rem] font-black text-yellow-500 tabular-nums leading-none">
+                    {{ formatDuration(lastWorkout.start_time, lastWorkout.end_time) }}
+                </div>
             </div>
-            <div
-                class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
-            >
-                <PlaceholderPattern />
+            <div v-else-if="lastWorkout" class="bg-gray-900 border-4 border-gray-800 rounded-3xl p-12 text-center">
+                <h1 class="text-5xl md:text-6xl font-black uppercase tracking-widest text-white mb-6">
+                    Workout in progress...
+                </h1>
+                <p class="text-2xl text-gray-400 font-bold uppercase tracking-widest">
+                    Started at: {{ formatDate(lastWorkout.start_time) }}
+                </p>
             </div>
-            <div
-                class="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border"
-            >
-                <PlaceholderPattern />
+            <div v-else class="bg-gray-900 border-4 border-gray-800 rounded-3xl p-12 text-center">
+                <h1 class="text-5xl md:text-6xl font-black uppercase tracking-widest text-white mb-6">
+                    No workouts yet!
+                </h1>
+                <p class="text-2xl text-gray-400 font-bold uppercase tracking-widest">
+                    Go start a workout to see your stats here.
+                </p>
             </div>
+
+            <!-- Workout History -->
+            <div v-if="workouts.length > 0" class="bg-gray-900 border-4 border-gray-800 rounded-3xl p-8 overflow-hidden flex flex-col">
+                <h2 class="text-3xl font-black uppercase tracking-widest text-white mb-8">
+                    Workout History
+                </h2>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="text-gray-400 border-b-2 border-gray-800 uppercase tracking-wider text-sm">
+                                <th class="pb-4 px-4 font-bold">Date</th>
+                                <th class="pb-4 px-4 font-bold">Type</th>
+                                <th class="pb-4 px-4 font-bold">Duration</th>
+                                <th class="pb-4 px-4 font-bold text-right">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr 
+                                v-for="workout in workouts" 
+                                :key="workout.id"
+                                class="border-b border-gray-800 last:border-0 hover:bg-gray-800/50 transition-colors"
+                            >
+                                <td class="py-4 px-4 text-white font-medium">
+                                    {{ formatDate(workout.start_time) }}
+                                </td>
+                                <td class="py-4 px-4 text-gray-300 capitalize">
+                                    {{ workout.type.replace('_', ' ') }}
+                                </td>
+                                <td class="py-4 px-4 text-yellow-500 font-bold tabular-nums">
+                                    {{ formatDuration(workout.start_time, workout.end_time) }}
+                                </td>
+                                <td class="py-4 px-4 text-right">
+                                    <span v-if="workout.end_time" class="px-3 py-1 bg-green-900/50 text-green-400 rounded-full text-xs font-bold uppercase tracking-wider">
+                                        Completed
+                                    </span>
+                                    <span v-else class="px-3 py-1 bg-blue-900/50 text-blue-400 rounded-full text-xs font-bold uppercase tracking-wider">
+                                        Incomplete
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
-        <div
-            class="relative min-h-[100vh] flex-1 rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border"
-        >
-            <PlaceholderPattern />
-        </div>
-    </div>
+    </GymLayout>
 </template>

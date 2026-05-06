@@ -12,6 +12,14 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('settings/gear', [\App\Http\Controllers\Settings\GearController::class, 'edit'])->name('settings.gear.edit');
     Route::put('settings/gear', [\App\Http\Controllers\Settings\GearController::class, 'update'])->name('settings.gear.update');
+
+    Route::get('settings/youtube', [\App\Http\Controllers\Settings\YoutubeController::class, 'index'])->name('settings.youtube.index');
+    Route::post('settings/youtube', [\App\Http\Controllers\Settings\YoutubeController::class, 'store'])->name('settings.youtube.store');
+    Route::delete('settings/youtube/{video}', [\App\Http\Controllers\Settings\YoutubeController::class, 'destroy'])->name('settings.youtube.destroy');
+
+    Route::get('settings/soundcloud', [\App\Http\Controllers\Settings\SoundcloudController::class, 'index'])->name('settings.soundcloud.index');
+    Route::post('settings/soundcloud', [\App\Http\Controllers\Settings\SoundcloudController::class, 'store'])->name('settings.soundcloud.store');
+    Route::delete('settings/soundcloud/{soundcloud}', [\App\Http\Controllers\Settings\SoundcloudController::class, 'destroy'])->name('settings.soundcloud.destroy');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

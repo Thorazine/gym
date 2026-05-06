@@ -27,6 +27,14 @@ const sidebarNavItems: NavItem[] = [
         title: 'Appearance',
         href: editAppearance(),
     },
+    {
+        title: 'Youtube Videos',
+        href: '/settings/youtube',
+    },
+    {
+        title: 'Soundcloud Tracks',
+        href: '/settings/soundcloud',
+    },
 ];
 
 const { isCurrentOrParentUrl } = useCurrentUrl();
