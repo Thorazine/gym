@@ -94,7 +94,7 @@ function stopWorkout() {
         
         <!-- Video Container -->
         <div class="flex-1 w-full h-full relative flex items-center justify-center px-4 pb-32">
-            <div class="w-full max-w-5xl aspect-video rounded-xl overflow-hidden shadow-2xl bg-gray-900">
+            <div class="w-full max-w-[calc((100vh-12rem)*16/9)] aspect-video rounded-xl overflow-hidden shadow-2xl bg-gray-900">
                 <div id="youtube-player" class="w-full h-full pointer-events-none"></div>
             </div>
         </div>
