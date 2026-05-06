@@ -21,42 +21,49 @@ const props = defineProps<{
 const isPlaying = ref(true);
 let player: any = null;
 
-onMounted(() => {
-    // Load YouTube IFrame API script
-    const tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    const firstScriptTag = document.getElementsByTagName('script')[0];
-    if (firstScriptTag && firstScriptTag.parentNode) {
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    }
+const initPlayer = () => {
+    player = new (window as any).YT.Player('youtube-player', {
+        height: '100%',
+        width: '100%',
+        videoId: props.video.video_id,
+        playerVars: {
+            autoplay: 1,
+            controls: 0,
+            modestbranding: 1,
+            rel: 0,
+            showinfo: 0,
+        },
+        events: {
+            onReady: onPlayerReady,
+            onStateChange: onPlayerStateChange
+        }
+    });
+};
 
-    // Define the global callback
-    (window as any).onYouTubeIframeAPIReady = () => {
-        player = new (window as any).YT.Player('youtube-player', {
-            height: '100%',
-            width: '100%',
-            videoId: props.video.video_id,
-            playerVars: {
-                autoplay: 1,
-                controls: 0,
-                modestbranding: 1,
-                rel: 0,
-                showinfo: 0,
-            },
-            events: {
-                onReady: onPlayerReady,
-                onStateChange: onPlayerStateChange
+onMounted(() => {
+    if ((window as any).YT && (window as any).YT.Player) {
+        initPlayer();
+    } else {
+        (window as any).onYouTubeIframeAPIReady = initPlayer;
+
+        if (!document.getElementById('youtube-iframe-api')) {
+            const tag = document.createElement('script');
+            tag.id = 'youtube-iframe-api';
+            tag.src = "https://www.youtube.com/iframe_api";
+            const firstScriptTag = document.getElementsByTagName('script')[0];
+            if (firstScriptTag && firstScriptTag.parentNode) {
+                firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+            } else {
+                document.head.appendChild(tag);
             }
-        });
-    };
+        }
+    }
 });
 
 onUnmounted(() => {
     if (player && typeof player.destroy === 'function') {
         player.destroy();
     }
-    // Cleanup global scope
-    delete (window as any).onYouTubeIframeAPIReady;
 });
 
 function onPlayerReady(event: any) {
