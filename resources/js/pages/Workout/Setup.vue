@@ -42,7 +42,7 @@ const props = defineProps<{
 
                 <!-- Ready Button -->
                 <Link 
-                    :href="`/users/${user.id}/workout/timer?type=${workoutType}&count=${exerciseCount}&timing=${timing}&exercises=${exerciseIds}`" 
+                    :href="`/users/${user.id}/workout/music?type=${workoutType}&count=${exerciseCount}&timing=${timing}&exercises=${exerciseIds}`" 
                     class="py-6 px-12 bg-white text-black rounded-full flex items-center gap-4 hover:bg-gray-200 transition-transform hover:scale-105"
                 >
                     <span class="text-5xl font-black uppercase tracking-widest">READY</span>

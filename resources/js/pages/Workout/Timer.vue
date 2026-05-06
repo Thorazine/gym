@@ -21,6 +21,7 @@ const props = defineProps<{
     timing: string | number; // '1', '2', or '3'
     exercises: Exercise[];
     exerciseIds: string;
+    musicUrl?: string | null;
 }>();
 
 // Map timing option to work/rest/rounds
@@ -41,6 +42,7 @@ const isPaused = ref(false);
 
 let timerInterval: ReturnType<typeof setInterval> | null = null;
 let beepAudio: HTMLAudioElement | null = null;
+let scWidget: any = null;
 
 const currentExercise = computed(() => {
     if (props.exercises.length === 0) return null;
@@ -54,6 +56,18 @@ onMounted(() => {
         beepAudio.load();
     } catch (e) {
         console.warn('Audio could not be loaded.');
+    }
+    
+    if (props.musicUrl) {
+        const script = document.createElement('script');
+        script.src = 'https://w.soundcloud.com/player/api.js';
+        script.onload = () => {
+            const iframe = document.getElementById('sc-widget') as HTMLIFrameElement;
+            if (iframe && (window as any).SC) {
+                scWidget = (window as any).SC.Widget(iframe);
+            }
+        };
+        document.body.appendChild(script);
     }
     
     startTimer();
@@ -134,6 +148,14 @@ const nextExercise = () => {
 
 const togglePause = () => {
     isPaused.value = !isPaused.value;
+    
+    if (scWidget) {
+        if (isPaused.value) {
+            scWidget.pause();
+        } else {
+            scWidget.play();
+        }
+    }
 };
 
 const skipExercise = () => {
@@ -162,6 +184,13 @@ const formatTime = (seconds: number) => {
 <template>
     <GymLayout :title="`Workout Timer - ${user.name}`" :show-back-button="false">
         
+        <iframe 
+            v-if="musicUrl"
+            id="sc-widget" 
+            :src="'https://w.soundcloud.com/player/?url=' + encodeURIComponent(musicUrl) + '&auto_play=true'" 
+            width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" style="display:none;"
+        ></iframe>
+
         <div class="flex flex-col h-full justify-center items-center select-none">
             
             <template v-if="phase !== 'done'">

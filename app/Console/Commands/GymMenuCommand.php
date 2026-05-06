@@ -33,6 +33,9 @@ class GymMenuCommand extends Command
                 'gym:add-body-parts' => 'Add Body Part',
                 'gym:add-workout-item' => 'Add Workout Item (Gear)',
                 'gym:add-excersice' => 'Add Exercise',
+                'gym:add-soundcloud' => 'Add Soundcloud',
+                'gym:add-video-category' => 'Add Video Category',
+                'gym:add-video' => 'Add Video',
                 'exit' => 'Exit',
             ]
         );

@@ -24,7 +24,13 @@ Route::get('/users/{user}/type', [WorkoutTypeController::class, 'index'])->name(
 Route::get('/users/{user}/workout/count', [WorkoutSessionController::class, 'count'])->name('users.workout.count');
 Route::get('/users/{user}/workout/timing', [WorkoutSessionController::class, 'timing'])->name('users.workout.timing');
 Route::get('/users/{user}/workout/setup', [WorkoutSessionController::class, 'setup'])->name('users.workout.setup');
+Route::get('/users/{user}/workout/music', [WorkoutSessionController::class, 'music'])->name('users.workout.music');
 Route::get('/users/{user}/workout/timer', [WorkoutSessionController::class, 'timer'])->name('users.workout.timer');
+
+// Video Workouts
+Route::get('/users/{user}/workout/video-categories', [\App\Http\Controllers\VideoWorkoutController::class, 'categories'])->name('users.workout.video-categories');
+Route::get('/users/{user}/workout/video-categories/{videoCategory}', [\App\Http\Controllers\VideoWorkoutController::class, 'videos'])->name('users.workout.videos');
+Route::get('/users/{user}/workout/videos/{video}/play', [\App\Http\Controllers\VideoWorkoutController::class, 'play'])->name('users.workout.video.play');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');

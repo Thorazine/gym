@@ -7,40 +7,42 @@ interface User {
     name: string;
 }
 
+interface VideoCategory {
+    id: number;
+    name: string;
+    slug: string;
+}
+
 const props = defineProps<{
     user: User;
+    categories: VideoCategory[];
 }>();
 
-const workoutTypes = [
-    { id: 'full', label: 'Start Full Body' },
-    { id: 'upper', label: 'Start Upper Body' },
-    { id: 'lower', label: 'Start Lower Body' },
-    { id: 'butt', label: 'Start Butt' },
-    { id: 'core', label: 'Start Core' },
-    { id: 'video', label: 'Start Workout Video' },
-];
 </script>
 
 <template>
-    <GymLayout :title="`Workout Type - ${user.name}`" :show-back-button="true">
+    <GymLayout :title="`Video Categories - ${user.name}`" :show-back-button="true">
         
         <div class="flex flex-col h-full mt-4">
             <h1 class="text-5xl md:text-6xl font-black text-center uppercase tracking-widest mb-10">
-                Choose Workout
+                Choose Category
             </h1>
             
             <div class="flex-1 grid grid-cols-1 md:grid-cols-2 gap-6 pb-12 content-center">
                 <Link 
-                    v-for="type in workoutTypes" 
-                    :key="type.id"
-                    :href="type.id === 'video' ? `/users/${user.id}/workout/video-categories` : `/users/${user.id}/workout/count?type=${type.id}`"
+                    v-for="category in categories" 
+                    :key="category.id"
+                    :href="`/users/${user.id}/workout/video-categories/${category.id}`"
                     class="h-32 md:h-48 flex items-center justify-center bg-gray-900 border-4 border-gray-800 rounded-3xl hover:bg-white hover:text-black hover:border-white transition-all group"
-                    :class="{'md:col-span-2' : type.id === 'full'}"
                 >
                     <span class="text-4xl md:text-6xl font-black uppercase tracking-widest px-6 text-center">
-                        {{ type.label }}
+                        {{ category.name }}
                     </span>
                 </Link>
+            </div>
+            
+            <div v-if="categories.length === 0" class="text-center text-gray-400 text-2xl mt-10">
+                No video categories available. Please add some via the terminal command.
             </div>
         </div>
 

@@ -6,6 +6,7 @@ use App\Models\BodyPart;
 use App\Models\Exercise;
 use App\Models\WorkoutItem;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class GymCommandsTest extends TestCase
@@ -54,5 +55,24 @@ class GymCommandsTest extends TestCase
         $this->assertCount(1, $exercise->bodyParts);
         $this->assertEquals('Bench', $exercise->workoutItems->first()->name);
         $this->assertEquals('Chest', $exercise->bodyParts->first()->name);
+    }
+
+    public function test_add_soundcloud_command(): void
+    {
+        Http::fake([
+            'soundcloud.com/*' => Http::response(['title' => 'Test Track'], 200),
+        ]);
+
+        $this->artisan('gym:add-soundcloud')
+            ->expectsQuestion('What is the Soundcloud URL?', 'https://soundcloud.com/test/track')
+            ->expectsOutput('Title: Test Track')
+            ->expectsOutput('URL: https://soundcloud.com/test/track')
+            ->expectsOutput('Successfully saved to database!')
+            ->assertSuccessful();
+
+        $this->assertDatabaseHas('soundclouds', [
+            'title' => 'Test Track',
+            'url' => 'https://soundcloud.com/test/track',
+        ]);
     }
 }

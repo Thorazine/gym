@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Exercise;
+use App\Models\Soundcloud;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -79,6 +80,15 @@ class WorkoutSessionController extends Controller
         $count = $request->query('count');
         $timing = $request->query('timing');
         $exerciseIds = explode(',', $request->query('exercises', ''));
+        $musicId = $request->query('music');
+        
+        $musicUrl = null;
+        if ($musicId) {
+            $music = Soundcloud::find($musicId);
+            if ($music) {
+                $musicUrl = $music->url;
+            }
+        }
 
         // Fetch exercises in the exact order they were provided in the URL
         if (empty(array_filter($exerciseIds))) {
@@ -97,6 +107,24 @@ class WorkoutSessionController extends Controller
             'timing' => $timing,
             'exercises' => $exercises,
             'exerciseIds' => $request->query('exercises'),
+            'musicUrl' => $musicUrl,
+        ]);
+    }
+
+    public function music(Request $request, User $user)
+    {
+        $type = $request->query('type');
+        $count = $request->query('count');
+        $timing = $request->query('timing');
+        $exerciseIds = $request->query('exercises');
+
+        return Inertia::render('Workout/Music', [
+            'user' => $user,
+            'workoutType' => $type,
+            'exerciseCount' => $count,
+            'timing' => $timing,
+            'exerciseIds' => $exerciseIds,
+            'soundclouds' => Soundcloud::all(),
         ]);
     }
 }
