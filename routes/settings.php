@@ -9,6 +9,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('settings/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('settings/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+    Route::get('settings/gear', [\App\Http\Controllers\Settings\GearController::class, 'edit'])->name('settings.gear.edit');
+    Route::put('settings/gear', [\App\Http\Controllers\Settings\GearController::class, 'update'])->name('settings.gear.update');
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

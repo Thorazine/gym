@@ -10,9 +10,9 @@ use App\Models\Video;
 use function Laravel\Prompts\select;
 use function Laravel\Prompts\text;
 
-#[Signature('gym:add-video')]
+#[Signature('gym:add-youtube')]
 #[Description('Add a new workout video from YouTube')]
-class AddVideoCommand extends Command
+class AddYoutubeCommand extends Command
 {
     public function handle()
     {

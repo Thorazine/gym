@@ -30,12 +30,16 @@ class GymMenuCommand extends Command
         $action = select(
             label: 'What would you like to do?',
             options: [
+                'gym:add-user' => 'Add User',
+                'gym:remove-user' => 'Remove User',
                 'gym:add-body-parts' => 'Add Body Part',
                 'gym:add-workout-item' => 'Add Workout Item (Gear)',
                 'gym:add-excersice' => 'Add Exercise',
                 'gym:add-soundcloud' => 'Add Soundcloud',
+                'gym:remove-soundcloud' => 'Remove Soundcloud',
                 'gym:add-video-category' => 'Add Video Category',
-                'gym:add-video' => 'Add Video',
+                'gym:add-youtube' => 'Add Youtube Video',
+                'gym:remove-youtube' => 'Remove Youtube Video',
                 'exit' => 'Exit',
             ]
         );

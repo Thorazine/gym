@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserAccountController extends Controller
 {
@@ -17,7 +18,16 @@ class UserAccountController extends Controller
             'name' => $validated['name'],
         ]);
 
+        Auth::login($user);
+
         // Redirect to gear selection for this new user
         return redirect()->route('users.gear.edit', $user);
+    }
+
+    public function login(User $user)
+    {
+        Auth::login($user);
+
+        return redirect()->route('users.type.index', $user);
     }
 }

@@ -12,6 +12,7 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // User Account Creation
 Route::post('/users', [UserAccountController::class, 'store'])->name('users.store');
+Route::post('/users/{user}/login', [UserAccountController::class, 'login'])->name('users.login');
 
 // Gear Selection (Per User)
 Route::get('/users/{user}/gear', [UserGearController::class, 'edit'])->name('users.gear.edit');

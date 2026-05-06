@@ -51,8 +51,11 @@ const submitCreateUser = () => {
                 <Link 
                     v-for="user in users" 
                     :key="user.id"
-                    :href="'/users/' + user.id + '/type'"
-                    class="h-40 flex flex-col items-center justify-center bg-gray-900 border-2 border-white rounded-2xl hover:bg-white hover:text-black transition-all group"
+                    :href="'/users/' + user.id + '/login'"
+                    method="post"
+                    as="button"
+                    type="button"
+                    class="w-full h-40 flex flex-col items-center justify-center bg-gray-900 border-2 border-white rounded-2xl hover:bg-white hover:text-black transition-all group"
                 >
                     <UserIcon class="w-12 h-12 mb-2 group-hover:text-black" />
                     <span class="text-4xl font-bold uppercase tracking-wider">{{ user.name }}</span>
