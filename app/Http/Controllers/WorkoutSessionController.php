@@ -39,7 +39,13 @@ class WorkoutSessionController extends Controller
         $timing = $request->query('timing');
 
         // Get the IDs of the gear the user has
-        $userGearIds = $user->workoutItems()->pluck('workout_items.id');
+        $userGearIds = $user->workoutItems()->pluck('workout_items.id')->toArray();
+        
+        // Always include Bodyweight as available gear
+        $bodyweightItem = \App\Models\WorkoutItem::where('name', 'Bodyweight')->first();
+        if ($bodyweightItem && !in_array($bodyweightItem->id, $userGearIds)) {
+            $userGearIds[] = $bodyweightItem->id;
+        }
 
         // Query exercises
         $query = Exercise::query();
@@ -54,9 +60,23 @@ class WorkoutSessionController extends Controller
 
         // Filter by type if not "full"
         if ($type !== 'full') {
-            // E.g., type = "upper" -> match body parts that have "upper" in their name
-            $query->whereHas('bodyParts', function ($q) use ($type) {
-                $q->where('name', 'like', '%'.$type.'%');
+            $upperBodyParts = ['Chest', 'Back', 'Shoulders', 'Biceps', 'Triceps', 'Forearms', 'Traps', 'Lats', 'Neck'];
+            $lowerBodyParts = ['Quadriceps', 'Hamstrings', 'Calves', 'Abductors', 'Adductors', 'Glutes'];
+            $coreBodyParts = ['Core', 'Obliques', 'Lower Back'];
+            $buttBodyParts = ['Glutes'];
+
+            $query->whereHas('bodyParts', function ($q) use ($type, $upperBodyParts, $lowerBodyParts, $coreBodyParts, $buttBodyParts) {
+                if ($type === 'upper') {
+                    $q->whereIn('name', $upperBodyParts);
+                } elseif ($type === 'lower') {
+                    $q->whereIn('name', $lowerBodyParts);
+                } elseif ($type === 'core') {
+                    $q->whereIn('name', $coreBodyParts);
+                } elseif ($type === 'butt') {
+                    $q->whereIn('name', $buttBodyParts);
+                } else {
+                    $q->where('name', 'like', '%'.$type.'%');
+                }
             });
         }
 
