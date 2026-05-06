@@ -29,6 +29,8 @@ const props = defineProps<{
 const timingsMap = ref<Record<string, { work: number; rest: number; rounds: number }>>({});
 const timingSettings = ref({ work: 30, rest: 10, rounds: 3 }); // Fallback defaults
 const isLoaded = ref(false);
+const isMusicReady = ref(!props.musicUrl);
+const hasStarted = ref(false);
 
 // State
 const phase = ref<'prep' | 'work' | 'rest' | 'done'>('prep');
@@ -79,9 +81,32 @@ onMounted(async () => {
             const iframe = document.getElementById('sc-widget') as HTMLIFrameElement;
             if (iframe && (window as any).SC) {
                 scWidget = (window as any).SC.Widget(iframe);
+                scWidget.bind((window as any).SC.Widget.Events.READY, () => {
+                    isMusicReady.value = true;
+                });
+                
+                // Fallback in case READY doesn't fire
+                setTimeout(() => {
+                    isMusicReady.value = true;
+                }, 3000);
             }
         };
         document.body.appendChild(script);
+    }
+});
+
+const initWorkout = async () => {
+    hasStarted.value = true;
+    
+    // Attempt to unlock audio context
+    if (beepAudio) {
+        beepAudio.play().catch(() => {});
+        beepAudio.pause();
+        beepAudio.currentTime = 0;
+    }
+    
+    if (scWidget) {
+        scWidget.play();
     }
     
     try {
@@ -95,7 +120,7 @@ onMounted(async () => {
     }
     
     startTimer();
-});
+};
 
 onUnmounted(() => {
     if (timerInterval) clearInterval(timerInterval);
@@ -224,16 +249,27 @@ const formatTime = (seconds: number) => {
         <iframe 
             v-if="musicUrl"
             id="sc-widget" 
-            :src="'https://w.soundcloud.com/player/?url=' + encodeURIComponent(musicUrl) + '&auto_play=true'" 
-            width="100%" height="166" scrolling="no" frameborder="no" allow="autoplay" style="display:none;"
+            :src="'https://w.soundcloud.com/player/?url=' + encodeURIComponent(musicUrl) + '&auto_play=false'" 
+            width="10" height="10" scrolling="no" frameborder="no" allow="autoplay" style="opacity: 0.01; position: absolute; z-index: -1; pointer-events: none;"
         ></iframe>
 
-        <div v-if="!isLoaded" class="flex flex-col h-full justify-center items-center text-white">
+        <div v-if="!isLoaded || !isMusicReady" class="flex flex-col h-full justify-center items-center text-white">
             <p class="text-3xl font-bold uppercase tracking-wider">Loading...</p>
         </div>
         <div v-else class="flex flex-col h-full justify-center items-center select-none">
             
-            <template v-if="phase !== 'done'">
+            <!-- Start Screen -->
+            <template v-if="!hasStarted">
+                <button 
+                    @click="initWorkout"
+                    class="py-12 px-24 bg-white text-black rounded-[3rem] flex flex-col items-center justify-center gap-4 hover:bg-gray-200 transition-transform active:scale-95 shadow-2xl shadow-black/50"
+                >
+                    <Play class="w-24 h-24 md:w-32 md:h-32 fill-black translate-x-2" />
+                    <span class="text-4xl md:text-6xl font-black uppercase tracking-widest">START</span>
+                </button>
+            </template>
+            
+            <template v-else-if="phase !== 'done'">
                 <!-- Exercise Header -->
                 <div class="text-center mb-8">
                     <h2 class="text-3xl md:text-5xl font-bold uppercase tracking-wider text-gray-400 mb-2">
