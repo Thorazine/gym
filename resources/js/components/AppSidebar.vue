@@ -12,6 +12,7 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    useSidebar,
 } from '@/components/ui/sidebar';
 import { dashboard, home } from '@/routes';
 import type { NavItem } from '@/types';
@@ -29,6 +30,7 @@ const mainNavItems: NavItem[] = [
     },
 ];
 
+const { setOpenMobile } = useSidebar();
 </script>
 
 <template>
@@ -37,7 +39,7 @@ const mainNavItems: NavItem[] = [
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child>
-                        <Link :href="dashboard()">
+                        <Link :href="dashboard()" @click="setOpenMobile(false)">
                             <AppLogo />
                         </Link>
                     </SidebarMenuButton>
