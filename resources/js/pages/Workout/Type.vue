@@ -40,6 +40,15 @@ const workoutTypes = [
                         {{ type.label }}
                     </span>
                 </Link>
+
+                <Link 
+                    :href="`/users/${user.id}/listen`"
+                    class="h-20 md:h-32 flex items-center justify-center bg-blue-900 border-4 border-blue-800 rounded-3xl hover:bg-blue-500 hover:text-white hover:border-white transition-all group md:col-span-2"
+                >
+                    <span class="text-xl sm:text-2xl md:text-4xl font-black uppercase tracking-widest px-6 text-center line-clamp-2 leading-tight">
+                        Just Listen To Music
+                    </span>
+                </Link>
             </div>
         </div>
 

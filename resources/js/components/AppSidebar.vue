@@ -14,21 +14,31 @@ import {
     SidebarMenuItem,
     useSidebar,
 } from '@/components/ui/sidebar';
-import { dashboard, home } from '@/routes';
+import { dashboard, lastWorkout } from '@/routes';
 import type { NavItem } from '@/types';
+import { computed } from 'vue';
+import { usePage } from '@inertiajs/vue3';
 
-const mainNavItems: NavItem[] = [
+const page = usePage();
+const user = computed(() => page.props.auth.user);
+
+const mainNavItems = computed<NavItem[]>(() => [
     {
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
     },
     {
+        title: 'Last workout',
+        href: lastWorkout(),
+        icon: LayoutGrid,
+    },
+    {
         title: 'Start workout',
-        href: home(),
+        href: `/users/${user.value?.id}/type`,
         icon: Play,
     },
-];
+]);
 
 const { setOpenMobile } = useSidebar();
 </script>

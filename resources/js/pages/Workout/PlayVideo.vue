@@ -189,7 +189,7 @@ async function finishWorkout() {
             console.error('Failed to update workout end time', e);
         }
     }
-    router.get('/dashboard');
+    router.get('/last-workout');
 }
 
 async function stopWorkout() {

@@ -33,8 +33,13 @@ Route::get('/users/{user}/workout/video-categories', [\App\Http\Controllers\Vide
 Route::get('/users/{user}/workout/video-categories/{videoCategory}', [\App\Http\Controllers\VideoWorkoutController::class, 'videos'])->name('users.workout.videos');
 Route::get('/users/{user}/workout/videos/{video}/play', [\App\Http\Controllers\VideoWorkoutController::class, 'play'])->name('users.workout.video.play');
 
+// Listen to Music
+Route::get('/users/{user}/listen', [\App\Http\Controllers\ListenController::class, 'index'])->name('users.listen.index');
+Route::get('/users/{user}/listen/{soundcloud}', [\App\Http\Controllers\ListenController::class, 'play'])->name('users.listen.play');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/last-workout', [\App\Http\Controllers\LastWorkoutController::class, 'index'])->name('lastWorkout');
 });
 
 // Workout saving routes

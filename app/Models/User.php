@@ -55,4 +55,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(Workout::class);
     }
+
+    public function soundclouds()
+    {
+        return $this->hasMany(Soundcloud::class);
+    }
 }

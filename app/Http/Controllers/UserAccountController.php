@@ -28,6 +28,6 @@ class UserAccountController extends Controller
     {
         Auth::login($user);
 
-        return redirect()->route('users.type.index', $user);
+        return redirect()->route('dashboard');
     }
 }

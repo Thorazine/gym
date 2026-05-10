@@ -11,12 +11,19 @@ class DashboardController extends Controller
     {
         $user = $request->user();
         
-        $lastWorkout = $user->workouts()->latest('id')->first();
-        $workouts = $user->workouts()->latest('id')->get();
+        $workouts = $user->workouts()->whereNotNull('end_time')->get();
+        $totalWorkouts = $workouts->count();
+        
+        $totalTimeSeconds = 0;
+        foreach ($workouts as $workout) {
+            $start = strtotime($workout->start_time);
+            $end = strtotime($workout->end_time);
+            $totalTimeSeconds += max(0, $end - $start);
+        }
 
         return Inertia::render('Dashboard', [
-            'lastWorkout' => $lastWorkout,
-            'workouts' => $workouts,
+            'totalWorkouts' => $totalWorkouts,
+            'totalTimeSeconds' => $totalTimeSeconds,
         ]);
     }
 }

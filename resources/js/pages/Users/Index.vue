@@ -14,6 +14,10 @@ defineProps<{
     users: User[];
 }>();
 
+defineOptions({
+    layout: null,
+});
+
 const isCreateModalOpen = ref(false);
 
 const form = useForm({

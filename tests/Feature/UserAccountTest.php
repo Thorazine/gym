@@ -30,7 +30,7 @@ class UserAccountTest extends TestCase
 
         $response = $this->post("/users/{$user->id}/login");
 
-        $response->assertRedirect(route('users.type.index', $user));
+        $response->assertRedirect(route('dashboard'));
         $this->assertAuthenticatedAs($user);
     }
 }

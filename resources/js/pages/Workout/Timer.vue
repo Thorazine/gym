@@ -236,7 +236,7 @@ const endWorkout = async () => {
             console.error('Failed to update workout end time', e);
         }
     }
-    router.visit('/dashboard');
+    router.visit('/last-workout');
 };
 
 const phaseText = computed(() => {
