@@ -58,7 +58,7 @@ const formatDate = (dateString: string) => {
 </script>
 
 <template>
-    <GymLayout title="Last workout" :show-back-button="true">
+    <GymLayout title="Last workout" :show-back-button="false">
         <Head title="Last workout" />
 
         <div class="flex flex-col h-full mt-4 max-w-5xl mx-auto w-full gap-12">

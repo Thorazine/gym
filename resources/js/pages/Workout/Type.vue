@@ -22,7 +22,7 @@ const workoutTypes = [
 </script>
 
 <template>
-    <GymLayout :title="`Workout Type - ${user.name}`" :show-back-button="true">
+    <GymLayout :title="`Workout Type - ${user.name}`" :show-back-button="false">
         
         <div class="flex flex-col h-full mt-4">
             <h1 class="text-5xl md:text-6xl font-black text-center uppercase tracking-widest mb-10">

@@ -24,7 +24,7 @@ const formatDuration = (totalSeconds: number) => {
 </script>
 
 <template>
-    <GymLayout title="Dashboard" :show-back-button="true">
+    <GymLayout title="Dashboard" :show-back-button="false">
         <Head title="Dashboard" />
 
         <div class="flex flex-col h-full mt-4 max-w-5xl mx-auto w-full gap-12">

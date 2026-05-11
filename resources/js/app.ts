@@ -14,6 +14,8 @@ createInertiaApp({
         switch (true) {
             case name === 'Welcome':
                 return null;
+            case name === 'Workout/Type':
+                return AppLayout;
             case name.startsWith('Users/'):
             case name.startsWith('Workout/'):
             case name.startsWith('Listen/'):
