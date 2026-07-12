@@ -20,6 +20,7 @@ interface Timing {
     work: number;
     rest: number;
     rounds: number;
+    name?: string;
 }
 
 const timings = ref<Timing[]>([]);
@@ -56,6 +57,10 @@ onMounted(async () => {
                     :href="`/users/${user.id}/workout/setup?type=${workoutType}&count=${exerciseCount}&timing=${timing.id}`"
                     class="py-8 px-4 flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6 bg-gray-900 border-4 border-gray-800 rounded-3xl hover:bg-white hover:text-black hover:border-white transition-all group"
                 >
+                    <div v-if="timing.name" class="flex flex-col items-center mr-0 md:mr-6 pr-0 md:pr-6 border-b-2 md:border-b-0 md:border-r-2 border-gray-700 pb-4 md:pb-0 mb-4 md:mb-0 w-full md:w-auto">
+                        <span class="text-3xl md:text-4xl font-black uppercase tracking-widest text-blue-500">{{ timing.name }}</span>
+                    </div>
+
                     <div class="flex flex-col items-center">
                         <span class="text-4xl md:text-5xl font-black uppercase tracking-widest">{{ timing.work }}s</span>
                         <span class="text-xl font-bold uppercase tracking-widest text-gray-400 group-hover:text-gray-600">Work</span>

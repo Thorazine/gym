@@ -11,5 +11,6 @@ return [
         ['id' => 7, 'work' => 60, 'rest' => 15, 'rounds' => 1],
         ['id' => 8, 'work' => 60, 'rest' => 15, 'rounds' => 2],
         ['id' => 9, 'work' => 60, 'rest' => 15, 'rounds' => 3],
+        ['id' => 10, 'name' => 'Stretch', 'work' => 15, 'rest' => 3, 'rounds' => 30],
     ],
 ];
